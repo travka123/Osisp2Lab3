@@ -24,9 +24,8 @@ void RegionReplace(HANDLE hProcess, MEMORY_BASIC_INFORMATION* memInfo,
 	ReadProcessMemory(hProcess, memInfo->BaseAddress, buffer, memInfo->RegionSize, &bytes);
 	oldstr[0]--; //Remove saving
 
-	int left = memInfo->RegionSize;
 	char* curBuffer = buffer;
-	char* strpos = SearchString(curBuffer, left, oldstr, oldstrSize);
+	char* strpos = SearchString(curBuffer, memInfo->RegionSize, oldstr, oldstrSize);
 	while (strpos) {
 		WriteProcessMemory(hProcess, (char*)memInfo->BaseAddress + (strpos - buffer), newstr, newstrSize, nullptr);
 		curBuffer = strpos + oldstrSize;
