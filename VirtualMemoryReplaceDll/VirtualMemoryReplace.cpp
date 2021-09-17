@@ -19,21 +19,19 @@ void RegionReplace(HANDLE hProcess, MEMORY_BASIC_INFORMATION* memInfo,
 
 	SIZE_T bytes;
 	char* buffer = new char[memInfo->RegionSize];
-	ReadProcessMemory(hProcess, memInfo->BaseAddress, buffer, memInfo->RegionSize, &bytes);
 
+	oldstr[0]++; //Save str from replace
+	ReadProcessMemory(hProcess, memInfo->BaseAddress, buffer, memInfo->RegionSize, &bytes);
 	oldstr[0]--; //Remove saving
 
 	int left = memInfo->RegionSize;
 	char* curBuffer = buffer;
 	char* strpos = SearchString(curBuffer, left, oldstr, oldstrSize);
 	while (strpos) {
-		WriteProcessMemory(hProcess, (char*)memInfo->BaseAddress + (strpos - buffer), newstr, newstrSize + 1, nullptr);
+		WriteProcessMemory(hProcess, (char*)memInfo->BaseAddress + (strpos - buffer), newstr, newstrSize, nullptr);
 		curBuffer = strpos + oldstrSize;
 		strpos = SearchString(curBuffer, memInfo->RegionSize - (curBuffer - buffer), oldstr, oldstrSize);
 	}
-
-	oldstr[0]++; //Save str from replace
-
 	delete[] buffer;
 }
 
@@ -45,7 +43,6 @@ void VirtualMemoryReplace(DWORD pid, void* minimumApplicationAddress, void* maxi
 	HANDLE hProcess = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, false, pid);
 	char* curAddress = (char*)minimumApplicationAddress;
 
-	oldstr[0]++; //Save str from replace
 	while (curAddress < maximumApplicationAddress) {
 		MEMORY_BASIC_INFORMATION memInfo;
 		VirtualQueryEx(hProcess, curAddress, &memInfo, sizeof(memInfo));
@@ -56,5 +53,4 @@ void VirtualMemoryReplace(DWORD pid, void* minimumApplicationAddress, void* maxi
 
 		curAddress += memInfo.RegionSize;
 	}
-	oldstr[0]--; //Remove saving
 }
