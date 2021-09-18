@@ -34,22 +34,22 @@ void RegionReplace(HANDLE hProcess, MEMORY_BASIC_INFORMATION* memInfo,
 	delete[] buffer;
 }
 
-void VirtualMemoryReplace(DWORD pid, void* minimumApplicationAddress, void* maximumApplicationAddress,
-	char* oldstr, char* newstr, int oldstrSize, int newstrSize) {
+void VirtualMemoryReplace(Params *params) {
+	if (!(params->newstrSize || params->oldstrSize)) return;
 
-	if (!(oldstrSize || newstrSize)) return;
+	SYSTEM_INFO sysInfo;
+	GetSystemInfo(&sysInfo);
 
-	HANDLE hProcess = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, false, pid);
-	char* curAddress = (char*)minimumApplicationAddress;
+	HANDLE hProcess = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, false, params->pid);
+	char* curAddress = (char*)sysInfo.lpMinimumApplicationAddress;
 
-	while (curAddress < maximumApplicationAddress) {
+	while (curAddress < sysInfo.lpMaximumApplicationAddress) {
 		MEMORY_BASIC_INFORMATION memInfo;
 		VirtualQueryEx(hProcess, curAddress, &memInfo, sizeof(memInfo));
 
 		if (memInfo.State == MEM_COMMIT && memInfo.AllocationProtect == PAGE_READWRITE) {
-			RegionReplace(hProcess, &memInfo, oldstr, newstr, oldstrSize, newstrSize);
+			RegionReplace(hProcess, &memInfo, params->oldstr, params->newstr, params->oldstrSize, params->newstrSize);
 		}
-
 		curAddress += memInfo.RegionSize;
 	}
 }
