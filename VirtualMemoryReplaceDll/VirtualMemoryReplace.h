@@ -17,3 +17,9 @@ struct Params {
 };
 
 extern "C" VirtualMemoryReplace_API void VirtualMemoryReplace(Params *params);
+
+extern "C" VirtualMemoryReplace_API void SetInvokeOnLoad(bool invokeOnLoad, Params *params);
+
+extern "C" VirtualMemoryReplace_API bool IsInvokeOnLoad();
+
+extern "C" VirtualMemoryReplace_API void InvokeOnLoad();

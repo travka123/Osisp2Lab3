@@ -53,3 +53,26 @@ void VirtualMemoryReplace(Params *params) {
 		curAddress += memInfo.RegionSize;
 	}
 }
+
+#pragma section("shrsec", shared)
+
+__declspec(allocate("shrsec"))
+bool isInvokeOnLoad = false;
+
+__declspec(allocate("shrsec"))
+Params invokeOnLoadParams = { };
+
+void SetInvokeOnLoad(bool invokeOnLoad, Params* params) {
+	isInvokeOnLoad = invokeOnLoad;
+	if (invokeOnLoad) {
+		invokeOnLoadParams = *params;
+	}
+}
+
+bool IsInvokeOnLoad() {
+	return isInvokeOnLoad;
+}
+
+void InvokeOnLoad() {
+	VirtualMemoryReplace(&invokeOnLoadParams);
+}

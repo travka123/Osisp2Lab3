@@ -28,7 +28,7 @@ DWORD GetPid(wchar_t* exeName) {
     return targetPid;
 }
 
-bool CallRemote(DWORD pid, const wchar_t* dllName, const char* funcName, const void* lpParameter, int parameterSize) {
+bool LoadRemote(DWORD pid, const wchar_t* dllName, const char* funcName, const void* lpParameter, int parameterSize) {
     if (!(pid && dllName && funcName)) return false;
 
     HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
@@ -72,11 +72,6 @@ int main()
     std::cout << "new string:" << std::endl;
     std::cin.getline(newstr, 256, '\n');
 
-    if (!CallRemote(targetPid, L"kernel32.dll", "LoadLibraryA", "VirtualMemoryReplaceDll.dll", strlen("VirtualMemoryReplaceDll.dll") + 1)) {
-        std::cout << "error" << std::endl;
-        return 1;
-    }
-    
     Params params;
     params.pid = targetPid;
     strcpy_s(params.oldstr, oldstr);
@@ -84,11 +79,23 @@ int main()
     params.oldstrSize = strlen(oldstr) + 1;
     params.newstrSize = strlen(newstr) + 1;
 
-    LoadLibraryA("VirtualMemoryReplaceDll.dll");
-    if (!CallRemote(targetPid, L"VirtualMemoryReplaceDll.dll", "VirtualMemoryReplace", &params, sizeof(Params))) {
+    HINSTANCE hInstance = LoadLibraryA("VirtualMemoryReplaceDll.dll");
+
+    if (!hInstance) {
+        std::cout << "Dll not found" << std::endl;
+        return 1;
+    }
+
+    void (*SetInvokeOnLoad)(bool invokeOnLoad, Params * params) = (void (*)(bool, Params*))GetProcAddress(hInstance, "SetInvokeOnLoad");
+
+    SetInvokeOnLoad(true, &params);
+
+    if (!LoadRemote(targetPid, L"kernel32.dll", "LoadLibraryA", "VirtualMemoryReplaceDll.dll", strlen("VirtualMemoryReplaceDll.dll") + 1)) {
         std::cout << "error" << std::endl;
         return 1;
     }
+
+    SetInvokeOnLoad(false, nullptr);
     
     std::cout << "OK" << std::endl;
     std::cin.get();
