@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualMemoryReplaceDll", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StaticImport", "StaticImport\StaticImport.vcxproj", "{E3AC778A-D259-4053-A0AA-A64D06DE5A38}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DynamicImport", "DynamicImport\DynamicImport.vcxproj", "{327AEC16-A008-461A-B099-40FF1F34074B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{E3AC778A-D259-4053-A0AA-A64D06DE5A38}.Release|x64.Build.0 = Release|x64
 		{E3AC778A-D259-4053-A0AA-A64D06DE5A38}.Release|x86.ActiveCfg = Release|Win32
 		{E3AC778A-D259-4053-A0AA-A64D06DE5A38}.Release|x86.Build.0 = Release|Win32
+		{327AEC16-A008-461A-B099-40FF1F34074B}.Debug|x64.ActiveCfg = Debug|x64
+		{327AEC16-A008-461A-B099-40FF1F34074B}.Debug|x64.Build.0 = Debug|x64
+		{327AEC16-A008-461A-B099-40FF1F34074B}.Debug|x86.ActiveCfg = Debug|Win32
+		{327AEC16-A008-461A-B099-40FF1F34074B}.Debug|x86.Build.0 = Debug|Win32
+		{327AEC16-A008-461A-B099-40FF1F34074B}.Release|x64.ActiveCfg = Release|x64
+		{327AEC16-A008-461A-B099-40FF1F34074B}.Release|x64.Build.0 = Release|x64
+		{327AEC16-A008-461A-B099-40FF1F34074B}.Release|x86.ActiveCfg = Release|Win32
+		{327AEC16-A008-461A-B099-40FF1F34074B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
