@@ -76,8 +76,8 @@ int main()
     params.pid = targetPid;
     strcpy_s(params.oldstr, oldstr);
     strcpy_s(params.newstr, newstr);
-    params.oldstrSize = strlen(oldstr) + 1;
-    params.newstrSize = strlen(newstr) + 1;
+    params.oldstrSize = strlen(oldstr);
+    params.newstrSize = strlen(newstr);
 
     HINSTANCE hInstance = LoadLibraryA("VirtualMemoryReplaceDll.dll");
 
